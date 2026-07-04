@@ -1,0 +1,6 @@
+# 统一行尾：文本按 LF 存储，二进制不转换
+* text=auto eol=lf
+
+*.png binary
+*.ico binary
+*.pimx binary
