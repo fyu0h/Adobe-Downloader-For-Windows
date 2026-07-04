@@ -1,0 +1,249 @@
+﻿<Window x:Class="AdobeDownloader.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="clr-namespace:AdobeDownloader.App.ViewModels"
+        xmlns:local="clr-namespace:AdobeDownloader.App"
+        mc:Ignorable="d"
+        Icon="AppIcon.ico"
+        Title="Adobe Downloader for Windows" Height="720" Width="1080"
+        MinHeight="560" MinWidth="900"
+        Background="{StaticResource Bg}"
+        FontFamily="Segoe UI, Microsoft YaHei UI">
+    <Window.DataContext>
+        <vm:MainViewModel/>
+    </Window.DataContext>
+
+    <Grid Margin="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- 顶部标题栏 -->
+        <Grid Grid.Row="0" Margin="0,0,0,14">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel>
+                <TextBlock Text="Adobe Downloader for Windows" FontSize="22" FontWeight="Bold"/>
+                <TextBlock Text="从 Adobe 官方渠道下载并安装 Adobe 应用（非破解版）" Foreground="{StaticResource Muted}" Margin="0,2,0,0"/>
+            </StackPanel>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                <Button Click="OnOpenUninstall">
+                    <StackPanel Orientation="Horizontal">
+                        <Path Data="{StaticResource IconUninstall}" Width="15" Height="15" Stretch="Uniform"
+                              Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                              VerticalAlignment="Center" Margin="0,0,6,0"/>
+                        <TextBlock Text="卸载" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <Button Click="OnOpenCleanup">
+                    <StackPanel Orientation="Horizontal">
+                        <Path Data="{StaticResource IconCleanup}" Width="15" Height="15" Stretch="Uniform"
+                              Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}"
+                              VerticalAlignment="Center" Margin="0,0,6,0"/>
+                        <TextBlock Text="清理" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+                <Button Content="⟳ 刷新目录" Style="{StaticResource PrimaryButton}"
+                        Command="{Binding RefreshCommand}" Margin="0"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- 主体 -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="360"/>
+                <ColumnDefinition Width="14"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- 左侧：产品列表 -->
+            <Border Grid.Column="0" Background="{StaticResource Panel}" CornerRadius="10" Padding="12">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBox Grid.Row="0" Margin="0,0,0,10"
+                             Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}"/>
+                    <ListBox Grid.Row="1" BorderThickness="0" Background="Transparent"
+                             ItemsSource="{Binding ProductsView}"
+                             SelectedItem="{Binding SelectedProduct}"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Padding" Value="8"/>
+                                <Setter Property="Margin" Value="0,2"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate DataType="{x:Type vm:ProductGroupViewModel}">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Border Grid.Column="0" Width="40" Height="40" Margin="0,0,10,0"
+                                            CornerRadius="8" Background="#F0F0F3" VerticalAlignment="Center">
+                                        <Image Width="32" Height="32"
+                                               Source="{Binding Icon}"
+                                               RenderOptions.BitmapScalingMode="HighQuality"/>
+                                    </Border>
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding DisplayName}" FontWeight="SemiBold" FontSize="14"
+                                                   TextTrimming="CharacterEllipsis"/>
+                                        <StackPanel Orientation="Horizontal" Margin="0,2,0,0">
+                                            <TextBlock Text="{Binding Id}" Foreground="{StaticResource Muted}" FontSize="12"/>
+                                            <TextBlock Text="  ·  " Foreground="{StaticResource Muted}" FontSize="12"/>
+                                            <TextBlock Foreground="{StaticResource Muted}" FontSize="12">
+                                                <Run Text="{Binding Versions.Count, Mode=OneWay}"/><Run Text=" 个版本"/>
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
+
+            <!-- 右侧：详情 + 任务 -->
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- 选择面板 -->
+                <Border Grid.Row="0" Background="{StaticResource Panel}" CornerRadius="10" Padding="18" Margin="0,0,0,14">
+                    <StackPanel>
+                        <TextBlock Text="{Binding SelectedProduct.DisplayName, FallbackValue='请选择一个产品'}"
+                                   FontSize="18" FontWeight="Bold"/>
+                        <Grid Margin="0,16,0,0" IsEnabled="{Binding HasSelection}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="14"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="14"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="版本" Foreground="{StaticResource Muted}" Margin="0,0,0,4"/>
+                                <ComboBox ItemsSource="{Binding AvailableVersions}"
+                                          SelectedItem="{Binding SelectedVersion}"
+                                          DisplayMemberPath="VersionDisplay"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="语言" Foreground="{StaticResource Muted}" Margin="0,0,0,4"/>
+                                <ComboBox ItemsSource="{Binding Languages}"
+                                          SelectedItem="{Binding SelectedLanguage}"
+                                          DisplayMemberPath="Display"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="4">
+                                <TextBlock Text="架构" Foreground="{StaticResource Muted}" Margin="0,0,0,4"/>
+                                <ComboBox ItemsSource="{Binding Architectures}"
+                                          SelectedItem="{Binding SelectedArchitecture}"
+                                          DisplayMemberPath="Display"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <TextBlock Text="下载目录" Foreground="{StaticResource Muted}" Margin="0,14,0,4"/>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Grid.Column="0" Text="{Binding DownloadDirectory}" Margin="0,0,10,0"/>
+                            <Button Grid.Column="1" Content="浏览..." Command="{Binding BrowseFolderCommand}"/>
+                            <Button Grid.Column="2" Content="⤓ 下载" Style="{StaticResource PrimaryButton}"
+                                    Command="{Binding DownloadCommand}" Margin="0"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- 任务列表 -->
+                <Border Grid.Row="1" Background="{StaticResource Panel}" CornerRadius="10" Padding="14">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="下载任务" FontWeight="Bold" FontSize="15" Margin="0,0,0,8"/>
+                        <TextBlock Grid.Row="1" Text="暂无下载任务" Foreground="{StaticResource Muted}"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   Visibility="{Binding DownloadTasks.Count, Converter={StaticResource ZeroToVisible}}"/>
+                        <ItemsControl Grid.Row="1" ItemsSource="{Binding DownloadTasks}">
+                            <ItemsControl.Template>
+                                <ControlTemplate TargetType="ItemsControl">
+                                    <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                        <ItemsPresenter/>
+                                    </ScrollViewer>
+                                </ControlTemplate>
+                            </ItemsControl.Template>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type vm:DownloadTaskViewModel}">
+                                    <Border Background="#FAFAFB" BorderBrush="#ECECEF" BorderThickness="1"
+                                            CornerRadius="8" Padding="12" Margin="0,4">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+                                            <Grid Grid.Row="0">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Text="{Binding Title}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                                                <TextBlock Grid.Column="1" Text="{Binding StatusText}" Foreground="{StaticResource Accent}" FontWeight="SemiBold"/>
+                                            </Grid>
+                                            <ProgressBar Grid.Row="1" Height="6" Margin="0,8" Minimum="0" Maximum="100"
+                                                         Value="{Binding Progress}" Foreground="{StaticResource Accent}"
+                                                         Background="#E6E6EA" BorderThickness="0"/>
+                                            <Grid Grid.Row="2">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Text="{Binding Detail}" Foreground="{StaticResource Muted}" FontSize="12" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                                    <Button Content="暂停" Command="{Binding PauseCommand}" Padding="10,4" FontSize="12"/>
+                                                    <Button Content="继续" Command="{Binding ResumeCommand}" Padding="10,4" FontSize="12"/>
+                                                    <Button Content="打开目录" Command="{Binding OpenFolderCommand}" Padding="10,4" FontSize="12"/>
+                                                    <Button Content="删除" Command="{Binding RemoveCommand}" Padding="10,4" FontSize="12"/>
+                                                    <Button Content="安装" Command="{Binding InstallCommand}" Style="{StaticResource PrimaryButton}" Padding="10,4" FontSize="12" Margin="0"/>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+
+        <!-- 状态栏 -->
+        <Border Grid.Row="2" Margin="0,12,0,0" Padding="12,8" Background="{StaticResource Panel}" CornerRadius="8">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{Binding Status}" Foreground="{StaticResource Muted}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                <ProgressBar Grid.Column="1" Width="120" Height="6" IsIndeterminate="True"
+                             Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisible}}"
+                             Foreground="{StaticResource Accent}" Background="#E6E6EA" BorderThickness="0"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

@@ -1,0 +1,15 @@
+# .NET build output
+bin/
+obj/
+publish/
+*.user
+
+# Rider / VS
+.idea/
+.vs/
+
+# 上游 macOS 源码（仅参考，不纳入版本库）
+upstream/
+
+# 运行时截图（可选保留）
+# docs/screenshot-*.png

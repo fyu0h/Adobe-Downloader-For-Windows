@@ -1,0 +1,558 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Package>
+    <Type>core</Type>
+    <PackageName>AdobeBridge16.0-mul-x64</PackageName>
+    <ProcessorFamily>64-bit</ProcessorFamily>
+    <PackageScheme>hd-standard</PackageScheme>
+    <Assets>
+        <Asset source="[StagingFolder]\AMT" target="[INSTALLDIR]\AMT" recursive="true"/>
+        <Asset source="[StagingFolder]\Application" target="[INSTALLDIR]" recursive="true"/>
+        <Asset source="[StagingFolder]\Extensions" target="[AdobeCommon]\Bridge 2026 Extensions" recursive="true"/>
+        <Asset source="[StagingFolder]\HelpCfg" target="[AdobeCommon]\HelpCfg" recursive="true"/>
+        <Asset source="[StagingFolder]\StartupScriptsCC" target="[AdobeCommon]\Startup Scripts CC\Adobe Bridge 2026" recursive="true"/>
+    </Assets>
+    <Commands>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\Adobe.adobebridge\shell\launch\command</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value>[INSTALLDIR]\bridgeproxy.exe -v %1</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\Adobe.adobebridge2026\shell\launch\command</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value>[INSTALLDIR]\bridgeproxy.exe -v %1</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\.adobebridge</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value>Adobe.adobebridge</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\.adobebridge</Path>
+            <Name>Content Type</Name>
+            <Type>REG_SZ</Type>
+            <Value>application/x-bridge-url</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\.adobebridge</Path>
+            <Name>PerceivedType</Name>
+            <Type>REG_SZ</Type>
+            <Value>text</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\.adobebridge\OpenWithList</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value></Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\MIME\Database\Content Type\application/x-bridge-url</Path>
+            <Name>Extension</Name>
+            <Type>REG_SZ</Type>
+            <Value>.adobebridge</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\AppID\{9895D6BF-6EDF-4db2-815C-4D3FAC9A9A9D}</Path>
+            <Name>RunAs</Name>
+            <Type>REG_SZ</Type>
+            <Value>Interactive User</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\Adobe.adobebridgeMTP_1</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value>Adobe Bridge 2026</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\Adobe.adobebridgeMTP_1\CLSID</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value>{1E6C711B-6D70-4a65-8AB6-745DC19BE2A6}</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\Adobe.adobebridgeMTP_1\CurVer</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value>Adobe.adobebridgeMTP_1.1</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\Adobe.adobebridgeMTP_1.1</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value>Adobe Bridge 2026</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\AppID\bridgeproxy.exe</Path>
+            <Name>AppId</Name>
+            <Type>REG_SZ</Type>
+            <Value>{9895D6BF-6EDF-4db2-815C-4D3FAC9A9A9D}</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\CLSID\{1E6C711B-6D70-4a65-8AB6-745DC19BE2A6}</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value>Adobe Bridge 2026</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\CLSID\{1E6C711B-6D70-4a65-8AB6-745DC19BE2A6}</Path>
+            <Name>AppId</Name>
+            <Type>REG_SZ</Type>
+            <Value>{9895D6BF-6EDF-4db2-815C-4D3FAC9A9A9D}</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\CLSID\{1E6C711B-6D70-4a65-8AB6-745DC19BE2A6}\LocalServer32</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value>[INSTALLDIR]\bridgeproxy.exe -m</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\CLSID\{1E6C711B-6D70-4a65-8AB6-745DC19BE2A6}\ProgID</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value>Adobe.adobebridgeMTP_1.1</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\CLSID\{1B9F2299-F3D8-4c32-9DE5-717EA74B73F9}\VersionIndependentProgID</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value>Adobe.adobebridgeMTP_1.1</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\Directory\shell\Bridge 16</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <LocalizedValue>
+                <Language locale="cs_CZ">Prohlédnout ve službě Adobe Bridge 2026</Language>
+                <Language locale="da_DK">Søg i Adobe Bridge 2026</Language>
+                <Language locale="de_DE">In Adobe Bridge 2026 durchsuchen</Language>
+                <Language locale="en_AE">Browse in Adobe Bridge 2026</Language>
+                <Language locale="en_GB">Browse in Adobe Bridge 2026</Language>
+                <Language locale="en_IL">Browse in Adobe Bridge 2026</Language>
+                <Language locale="en_US">Browse in Adobe Bridge 2026</Language>
+                <Language locale="es_ES">Buscar en Adobe Bridge 2026</Language>
+                <Language locale="es_MX">Buscar en Adobe Bridge 2026</Language>
+                <Language locale="fi_FI">Selaa: Adobe Bridge 2026</Language>
+                <Language locale="fr_CA">Parcourir dans Adobe Bridge 2026</Language>
+                <Language locale="fr_FR">Parcourir dans Adobe Bridge 2026</Language>
+                <Language locale="fr_MA">Parcourir dans Adobe Bridge 2026</Language>
+                <Language locale="hu_HU">Böngészés a következőben: Adobe Bridge 2026</Language>
+                <Language locale="it_IT">Sfoglia in Adobe Bridge 2026</Language>
+                <Language locale="ja_JP">Adobe Bridge 2026 で参照</Language>
+                <Language locale="ko_KR">Adobe Bridge 2026 에서 찾아보기</Language>
+                <Language locale="nb_NO">Utforsk Adobe Bridge 2026</Language>
+                <Language locale="nl_NL">Bladeren in Adobe Bridge 2026</Language>
+                <Language locale="pl_PL">Przeglądaj: Adobe Bridge 2026</Language>
+                <Language locale="pt_BR">Procurar no Adobe Bridge 2026</Language>
+                <Language locale="ru_RU">Обзор в Adobe Bridge 2026</Language>
+                <Language locale="sv_SE">Sök i Adobe Bridge 2026</Language>
+                <Language locale="tr_TR">Adobe Bridge 2026 ürününde gözat</Language>
+                <Language locale="uk_UA">Шукати у Adobe Bridge 2026</Language>
+                <Language locale="zh_CN"> 在 Adobe Bridge 2026 中浏览</Language>
+                <Language locale="zh_TW">於 Adobe Bridge 2026 中瀏覽</Language>
+            </LocalizedValue>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\Directory\shell\Bridge 16\command</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value>[INSTALLDIR]\Adobe Bridge.exe "%L"</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\.xmp</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value>Bridge.XMPFileType.16</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\.abdata</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value>Bridge.ABDATAFileType.16</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\.workspace</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value>Bridge.WSFileType.16</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\Bridge.XMPFileType.16\DefaultIcon</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value>[INSTALLDIR]\icon\BR_XMPFile.ico</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\Bridge.WSFileType.16\DefaultIcon</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value>[INSTALLDIR]\icon\BR_Workspace.ico</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\Bridge.ABDATAFileType.16\DefaultIcon</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value>[INSTALLDIR]\icon\BR_Data.ico</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\.adobebridge\OpenWithList\Adobe Bridge.exe</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value></Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\.adobebridge\OpenWithProgids</Path>
+            <Name>Adobe.adobebridge</Name>
+            <Type>REG_BINARY</Type>
+            <Value></Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\Adobe.adobebridge</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value>Adobe Bridge URL</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\Adobe.adobebridge</Path>
+            <Name>EditFlags</Name>
+            <Type>REG_BINARY</Type>
+            <Value>00000100</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\Adobe.adobebridge2026</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value>Adobe Bridge 2026</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\Adobe.adobebridge\shell</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value>open</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\Adobe.adobebridge\shell\open</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value>&amp;Open</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\Adobe.adobebridge\DefaultIcon</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value>[INSTALLDIR]\icon\BR_GenericFile.ico</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\Adobe.adobebridge2026\shell</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value>open</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\Adobe.adobebridge2026\shell\open</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value>&amp;Open</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\adobebridge</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value>URL:Adobe Bridge Protocol</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\adobebridge</Path>
+            <Name>URL Protocol</Name>
+            <Type>REG_SZ</Type>
+            <Value></Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\adobebridge\shell</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value>open</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\adobebridge\shell\open</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value>&amp;Open</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\adobebridge\DefaultIcon</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value>[INSTALLDIR]\Adobe Bridge.exe</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\Adobe.adobebridge\shell\open\command</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value>[INSTALLDIR]\Adobe Bridge.exe "%L"</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\adobebridge\shell\open\command</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value>[INSTALLDIR]\Adobe Bridge.exe  "%L"</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\.collection</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value>Bridge.Collection</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\Bridge.Collection</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value>Adobe Bridge Collection File</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\Bridge.Collection\defaultIcon</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value>[INSTALLDIR]\Adobe Bridge.exe,2</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\Bridge.Collection\shell</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value>open</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CLASSES_ROOT\Bridge.Collection\shell\open\Command</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value>"[INSTALLDIR]\Adobe Bridge.exe"  "%1"</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_LOCAL_MACHINE\SOFTWARE\Adobe\Adobe Bridge\2026\Installer</Path>
+            <Name>InstallPath</Name>
+            <Type>REG_SZ</Type>
+            <Value>[INSTALLDIR]</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_LOCAL_MACHINE\SOFTWARE\Adobe\Adobe Bridge\2026\Installer</Path>
+            <Name>PRODUCT_GUID</Name>
+            <Type>REG_SZ</Type>
+            <Value>[AdobeCode]</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\Adobe Bridge.exe</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value>[INSTALLDIR]\Adobe Bridge.exe</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\Adobe Bridge.exe</Path>
+            <Name>Path</Name>
+            <Type>REG_SZ</Type>
+            <Value>[INSTALLDIR]</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_LOCAL_MACHINE\SOFTWARE\Adobe\Adobe Bridge\2026\Installer</Path>
+            <Name>AdobeProductLanguage</Name>
+            <Type>REG_SZ</Type>
+            <Value>[installLanguage]</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\AutoplayHandlers\Handlers\Bridge2026ImportMediaOnArrival</Path>
+            <Name>Provider</Name>
+            <Type>REG_SZ</Type>
+            <Value>Adobe Bridge 2026</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\AutoplayHandlers\Handlers\Bridge2026ImportMediaOnArrival</Path>
+            <Name>InvokeVerb</Name>
+            <Type>REG_SZ</Type>
+            <Value>launch</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\AutoplayHandlers\Handlers\Bridge2026ImportMediaOnArrival</Path>
+            <Name>InvokeProgID</Name>
+            <Type>REG_SZ</Type>
+            <Value>Adobe.adobebridge2026</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\AutoplayHandlers\Handlers\Bridge2026ImportMediaOnArrival</Path>
+            <Name>DefaultIcon</Name>
+            <Type>REG_SZ</Type>
+            <Value>[INSTALLDIR]\Adobe Bridge.exe,0</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\AutoplayHandlers\Handlers\Bridge2026ImportMediaOnArrival</Path>
+            <Name>Action</Name>
+            <Type>REG_SZ</Type>
+            <Value>Download images</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\AutoplayHandlers\EventHandlers\ShowPicturesOnArrival</Path>
+            <Name>Bridge2026ImportMediaOnArrival</Name>
+            <Type>REG_SZ</Type>
+            <Value></Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\AutoplayHandlers\EventHandlers\PlayVideoFilesOnArrival</Path>
+            <Name>Bridge2026ImportMediaOnArrival</Name>
+            <Type>REG_SZ</Type>
+            <Value></Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\AutoplayHandlers\EventHandlers\MixedContentOnArrival</Path>
+            <Name>Bridge2026ImportMediaOnArrival</Name>
+            <Type>REG_SZ</Type>
+            <Value></Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\AutoplayHandlers\Handlers\Bridge2026NonVolumeHandler</Path>
+            <Name>Provider</Name>
+            <Type>REG_SZ</Type>
+            <Value>Adobe Bridge 2026</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\AutoplayHandlers\Handlers\Bridge2026NonVolumeHandler</Path>
+            <Name>InitCmdLine</Name>
+            <Type>REG_SZ</Type>
+            <Value></Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\AutoplayHandlers\Handlers\Bridge2026NonVolumeHandler</Path>
+            <Name>ProgID</Name>
+            <Type>REG_SZ</Type>
+            <Value>Adobe.adobebridgeMTP_1</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\AutoplayHandlers\Handlers\Bridge2026NonVolumeHandler</Path>
+            <Name>DefaultIcon</Name>
+            <Type>REG_SZ</Type>
+            <Value>[INSTALLDIR]\Adobe Bridge.exe,0</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\AutoplayHandlers\Handlers\Bridge2026NonVolumeHandler</Path>
+            <Name>Action</Name>
+            <Type>REG_SZ</Type>
+            <Value>Download images</Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\Adobe Bridge.exe</Path>
+            <Name>Path</Name>
+            <Type>REG_SZ</Type>
+            <Value>[INSTALLDIR]</Value>
+        </Registry>
+        <Registry isRecursiveDelete="true" isUserPreferences="true">
+            <Path>HKEY_CURRENT_USER\Software\Adobe\Bridge 2026</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value></Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.adobebridge\OpenWithProgids</Path>
+            <Name>Adobe.adobebridge</Name>
+            <Type>REG_BINARY</Type>
+            <Value></Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.adobebridge</Path>
+            <Name>Default</Name>
+            <Type>REG_SZ</Type>
+            <Value></Value>
+        </Registry>
+        <Registry isUserPreferences="true">
+            <Path>HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run</Path>
+            <Name>AdobeBridge</Name>
+            <Type>REG_SZ</Type>
+            <Value></Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\explorer\AutoplayHandlers\EventHandlers\WPD\Source\{4AD2C85E-5E2D-45E5-8864-4F229E3C6CF0}</Path>
+            <Name>Bridge2026NonVolumeHandler</Name>
+            <Type>REG_SZ</Type>
+            <Value></Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\explorer\AutoplayHandlers\EventHandlers\WPD\Source\{9261B03C-3D78-4519-85E3-02C5E1F50BB9}</Path>
+            <Name>Bridge2026NonVolumeHandler</Name>
+            <Type>REG_SZ</Type>
+            <Value></Value>
+        </Registry>
+        <Registry>
+            <Path>HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\explorer\AutoplayHandlers\EventHandlers\WPD\Source\{EF2107D5-A52A-4243-A26B-62D4176D7603}</Path>
+            <Name>Bridge2026NonVolumeHandler</Name>
+            <Type>REG_SZ</Type>
+            <Value></Value>
+        </Registry>
+        <FolderIcon>
+            <FolderPath>[INSTALLDIR]</FolderPath>
+            <IconPath>[INSTALLDIR]\AMT\Core files\BR_AppFolder.ico</IconPath>
+        </FolderIcon>
+        <Shortcut>
+            <Target>[INSTALLDIR]\Adobe Bridge.exe</Target>
+            <Directory>[StartMenuSubFolder]</Directory>
+            <Name>
+                <Language locale="sq_AL">Adobe Bridge 2026</Language>
+                <Language locale="be_BY">Adobe Bridge 2026</Language>
+                <Language locale="bg_BG">Adobe Bridge 2026</Language>
+                <Language locale="ca_ES">Adobe Bridge 2026</Language>
+                <Language locale="zh_CN">Adobe Bridge 2026</Language>
+                <Language locale="zh_TW">Adobe Bridge 2026</Language>
+                <Language locale="hr_HR">Adobe Bridge 2026</Language>
+                <Language locale="cs_CZ">Adobe Bridge 2026</Language>
+                <Language locale="da_DK">Adobe Bridge 2026</Language>
+                <Language locale="nl_NL">Adobe Bridge 2026</Language>
+                <Language locale="en_MX">Adobe Bridge 2026</Language>
+                <Language locale="en_XC">Adobe Bridge 2026</Language>
+                <Language locale="en_XM">Adobe Bridge 2026</Language>
+                <Language locale="en_GB">Adobe Bridge 2026</Language>
+                <Language locale="en_US">Adobe Bridge 2026</Language>
+                <Language locale="es_MX">Adobe Bridge 2026</Language>
+                <Language locale="et_EE">Adobe Bridge 2026</Language>
+                <Language locale="fi_FI">Adobe Bridge 2026</Language>
+                <Language locale="fr_CA">Adobe Bridge 2026</Language>
+                <Language locale="fr_FR">Adobe Bridge 2026</Language>
+                <Language locale="fr_MX">Adobe Bridge 2026</Language>
+                <Language locale="fr_XM">Adobe Bridge 2026</Language>
+                <Language locale="de_DE">Adobe Bridge 2026</Language>
+                <Language locale="hu_HU">Adobe Bridge 2026</Language>
+                <Language locale="hi_IN">Adobe Bridge 2026</Language>
+                <Language locale="is_IS">Adobe Bridge 2026</Language>
+                <Language locale="it_IT">Adobe Bridge 2026</Language>
+                <Language locale="ja_JP">Adobe Bridge 2026</Language>
+                <Language locale="ko_KR">Adobe Bridge 2026</Language>
+                <Language locale="lv_LV">Adobe Bridge 2026</Language>
+                <Language locale="lt_LT">Adobe Bridge 2026</Language>
+                <Language locale="mk_MK">Adobe Bridge 2026</Language>
+                <Language locale="nn_NO">Adobe Bridge 2026</Language>
+                <Language locale="nb_NO">Adobe Bridge 2026</Language>
+                <Language locale="pl_PL">Adobe Bridge 2026</Language>
+                <Language locale="pt_BR">Adobe Bridge 2026</Language>
+                <Language locale="ru_RU">Adobe Bridge 2026</Language>
+                <Language locale="sh_YU">Adobe Bridge 2026</Language>
+                <Language locale="sk_SK">Adobe Bridge 2026</Language>
+                <Language locale="sl_SI">Adobe Bridge 2026</Language>
+                <Language locale="es_QM">Adobe Bridge 2026</Language>
+                <Language locale="es_ES">Adobe Bridge 2026</Language>
+                <Language locale="sv_SE">Adobe Bridge 2026</Language>
+                <Language locale="th_TH">Adobe Bridge 2026</Language>
+                <Language locale="tr_TR">Adobe Bridge 2026</Language>
+                <Language locale="uk_UA">Adobe Bridge 2026</Language>
+                <Language locale="vi_VN">Adobe Bridge 2026</Language>
+                <Language locale="en_AE">Adobe Bridge 2026</Language>
+                <Language locale="en_IL">Adobe Bridge 2026</Language>
+                <Language locale="fr_MA">Adobe Bridge 2026</Language>
+            </Name>
+        </Shortcut>
+        <Permission>
+            <Path>HKEY_LOCAL_MACHINE\SOFTWARE\Adobe\Adobe Bridge\2026\Installer</Path>
+            <User>Everyone</User>
+            <PermissionValue>GENERIC_READ</PermissionValue>
+        </Permission>
+        <Permission>
+            <Path>HKEY_LOCAL_MACHINE\SOFTWARE\Adobe\DefaultLanguage\2026</Path>
+            <User>Everyone</User>
+            <PermissionValue>GENERIC_READ</PermissionValue>
+        </Permission>
+    </Commands>
+</Package>

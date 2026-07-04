@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/AdobeDownloader.App/AdobeDownloader.App.csproj" />
+    <Project Path="src/AdobeDownloader.Core/AdobeDownloader.Core.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/AdobeDownloader.Core.Tests/AdobeDownloader.Core.Tests.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,97 @@
+﻿<Window x:Class="AdobeDownloader.App.CleanupWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Icon="AppIcon.ico"
+        Title="Adobe Downloader — 清理" Height="640" Width="920"
+        Background="{StaticResource Bg}" FontFamily="Segoe UI, Microsoft YaHei UI"
+        WindowStartupLocation="CenterScreen">
+    <Grid Margin="18">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0" Margin="0,0,0,12">
+            <StackPanel Orientation="Horizontal">
+                <Path Data="{StaticResource IconCleanup}" Width="22" Height="22" Stretch="Uniform"
+                      Fill="{StaticResource Accent}" VerticalAlignment="Center" Margin="0,0,8,0"/>
+                <TextBlock Text="清理 Adobe 残留" FontSize="20" FontWeight="Bold" VerticalAlignment="Center"/>
+            </StackPanel>
+            <TextBlock Text="勾选要清理的类别，先“扫描”预览将删除的内容，确认后再“开始清理”。清理会永久删除文件、注册表项、服务与 hosts 条目，且需要管理员权限。"
+                       Foreground="{StaticResource Muted}" TextWrapping="Wrap" Margin="0,4,0,0"/>
+        </StackPanel>
+
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="360"/>
+                <ColumnDefinition Width="14"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- 左：类别勾选 -->
+            <Border Grid.Column="0" Background="{StaticResource Panel}" CornerRadius="10" Padding="12">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <ItemsControl x:Name="OptionsList">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="#FAFAFB" BorderBrush="#ECECEF" BorderThickness="1"
+                                        CornerRadius="8" Padding="10" Margin="0,3">
+                                    <CheckBox IsChecked="{Binding IsSelected}">
+                                        <StackPanel Margin="6,0,0,0">
+                                            <TextBlock Text="{Binding Name}" FontWeight="SemiBold"/>
+                                            <TextBlock Text="{Binding Description}" Foreground="{StaticResource Muted}"
+                                                       FontSize="12" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                                        </StackPanel>
+                                    </CheckBox>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </ScrollViewer>
+            </Border>
+
+            <!-- 右：预览 -->
+            <Border Grid.Column="2" Background="{StaticResource Panel}" CornerRadius="10" Padding="12">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" x:Name="PreviewSummary" Text="尚未扫描" FontWeight="SemiBold" Margin="0,0,0,8"/>
+                    <ListBox Grid.Row="1" x:Name="PreviewList" BorderThickness="0" Background="Transparent"
+                             ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="0,2">
+                                    <TextBlock Text="{Binding Title}" FontSize="12" FontWeight="SemiBold"/>
+                                    <TextBlock Text="{Binding Target}" FontSize="11" Foreground="{StaticResource Muted}"
+                                               TextTrimming="CharacterEllipsis"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <Grid Grid.Row="2" Margin="0,14,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" x:Name="StatusText" Foreground="{StaticResource Muted}" VerticalAlignment="Center"/>
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <Button x:Name="ScanButton" Content="扫描" Click="OnScan" Padding="18,7"/>
+                <Button x:Name="CleanButton" Click="OnClean" Style="{StaticResource PrimaryButton}"
+                        Padding="18,7" Margin="0" IsEnabled="False">
+                    <StackPanel Orientation="Horizontal">
+                        <Path Data="{StaticResource IconCleanup}" Width="15" Height="15" Stretch="Uniform"
+                              Fill="White" VerticalAlignment="Center" Margin="0,0,6,0"/>
+                        <TextBlock Text="开始清理" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
