@@ -4,6 +4,19 @@
 
 ---
 
+## v1.6.1 — 2026-07-05（修复：打开软件首次下载偶发"获取 application.json 失败"）
+
+**现象**：打开软件后第一次下载某产品（如 Audition）偶尔报"创建下载任务失败：获取 application.json 失败"，再点一次就好。
+
+**原因**：目录做了本地缓存后，打开软件后**第一个真正的联网请求就是抓 application.json**（host `cdn-ffc.oobesaas.adobe.com`）。该首次"冷连接"偶发抖动（连接重置/超时/DNS）；原重试退避为 5s、10s，首次重试要等 5 秒，太慢，偶尔没覆盖住抖动窗口就整体失败；手动再点时抖动已过便成功。请求头是静态的（无会话依赖），故非会话问题。
+
+**修复**：application.json 重试改为**快速退避 1s/2s/4s/8s**、次数 3→5，让首连抖动在同一次点击内自动恢复；并把失败的内层原因（超时/连接重置/HTTP 码）带入报错信息，便于定位。
+
+### 涉及文件
+- 改 `Core/AdobeApiClient.cs`（`FetchApplicationInfoAsync` 退避 `1<<attempt`、报错含 inner 详情）、`Core/NetworkConstants.cs`（`MaxServiceCallRetries` 3→5）。
+
+---
+
 ## v1.6.0 — 2026-07-05（安装引擎支持 RunProgram：自动安装 VC++ 运行库）
 
 补上全量安装的已知缺口之一：**VC++ 运行库**。重型 Adobe 产品依赖它，缺失会导致装好后 exe 无法启动。

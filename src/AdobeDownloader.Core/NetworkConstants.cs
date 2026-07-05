@@ -9,7 +9,7 @@ public static class NetworkConstants
     public const string DefaultApiVersion = "6";
 
     public const int MaxRetryAttempts = 3;
-    public const int MaxServiceCallRetries = 3;
+    public const int MaxServiceCallRetries = 5;   // application.json：快速退避 1/2/4/8s，覆盖首连抖动
     public const int BufferSize = 1024 * 1024;      // 1 MiB
     public const int MaxConcurrentDownloads = 3;
 

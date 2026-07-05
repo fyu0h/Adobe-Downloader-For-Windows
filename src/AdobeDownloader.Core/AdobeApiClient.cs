@@ -100,10 +100,12 @@ public sealed class AdobeApiClient
             {
                 last = ex;
                 if (attempt < NetworkConstants.MaxServiceCallRetries - 1)
-                    await Task.Delay(TimeSpan.FromSeconds(5 * (attempt + 1)), ct);
+                    // 快速退避 1s/2s/4s...：首次联网冷连接抖动能在同一次点击内自动恢复
+                    await Task.Delay(TimeSpan.FromSeconds(1 << attempt), ct);
             }
         }
-        throw new AdobeApiException("获取 application.json 失败", inner: last);
+        var detail = last?.InnerException?.Message ?? last?.Message ?? "未知错误";
+        throw new AdobeApiException($"获取 application.json 失败：{detail}", inner: last);
     }
 
     private string BuildProductsUrl(TargetArchitecture arch, IEnumerable<string> channels)
