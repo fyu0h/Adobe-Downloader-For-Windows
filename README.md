@@ -89,3 +89,7 @@ docs/DESIGN.md             设计文档（含 Adobe 下载协议梳理）
 ## 免责声明
 
 本工具仅用于从 Adobe 官方渠道下载官方安装包，请遵守 Adobe 的许可协议。软件许可激活由用户自行解决，本工具不提供任何破解或绕过许可的功能。
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=fyu0h/Adobe-Downloader-For-Windows&type=Date)](https://star-history.com/#fyu0h/Adobe-Downloader-For-Windows&Date)
