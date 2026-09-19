@@ -107,14 +107,18 @@ public sealed class WindowsInstaller
             var pkg = PimxParser.Parse(xml, driver.InstallLanguage);
 
             var staging = ResolveStagingFolder(extractRoot);
+            var isMainComponent = string.Equals(comp.SapCode, _mainSapCode, StringComparison.OrdinalIgnoreCase);
+            var adobeProgramFiles = isMainComponent
+                ? driver.InstallDir
+                : DriverXmlGenerator.DefaultWindowsInstallDir;
             var props = InstallProperties.ForWindows(
-                adobeProgramFiles: driver.InstallDir,
+                adobeProgramFiles: adobeProgramFiles,
                 installDirTemplate: installDirTemplate,
                 stagingFolder: staging,
                 installLanguage: driver.InstallLanguage,
                 architecture: driver.TargetArchitecture);
 
-            if (string.Equals(comp.SapCode, _mainSapCode, StringComparison.OrdinalIgnoreCase)
+            if (isMainComponent
                 && string.IsNullOrEmpty(_mainInstallDir))
                 _mainInstallDir = props["INSTALLDIR"];
 

@@ -153,6 +153,17 @@
                             </StackPanel>
                         </Grid>
 
+                        <TextBlock Text="安装目录（主程序，共享组件保留默认位置）"
+                                   Foreground="{StaticResource Muted}" Margin="0,14,0,4"/>
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Grid.Column="0" Text="{Binding InstallDirectory}" Margin="0,0,10,0"/>
+                            <Button Grid.Column="1" Content="浏览..." Command="{Binding BrowseInstallFolderCommand}"/>
+                        </Grid>
+
                         <TextBlock Text="下载目录" Foreground="{StaticResource Muted}" Margin="0,14,0,4"/>
                         <Grid>
                             <Grid.ColumnDefinitions>

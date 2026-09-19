@@ -179,6 +179,22 @@ public sealed class DownloadTaskViewModel : ObservableObject
             return;
         }
 
+        // 安装前按当前主界面设置的安装目录刷新 driver.xml，
+        // 这样旧下载任务也可以直接安装到新路径，而不必重新下载。
+        try
+        {
+            var currentSettings = AppSettings.Load();
+            var driverXml = DriverXmlGenerator.Generate(Plan, currentSettings.InstallDirectory);
+            if (!string.IsNullOrWhiteSpace(driverXml))
+                File.WriteAllText(driver, driverXml);
+        }
+        catch (Exception ex)
+        {
+            AppDialog.Show($"更新安装目录失败：{ex.Message}", "Adobe Downloader",
+                MessageBoxButton.OK, MessageBoxImage.Warning);
+            return;
+        }
+
         // 用内置安装引擎（移植自原版 HDPIM），以管理员权限重启自身进入 --install 模式。
         try
         {

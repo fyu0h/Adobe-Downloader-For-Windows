@@ -44,6 +44,7 @@ public sealed class MainViewModel : ObservableObject
         DownloadCommand = new AsyncRelayCommand(StartDownloadAsync,
             () => SelectedVersion is not null && !IsBusy);
         BrowseFolderCommand = new RelayCommand(BrowseFolder);
+        BrowseInstallFolderCommand = new RelayCommand(BrowseInstallFolder);
 
         LoadPersistedTasks();
         // 注：SelectedArchitecture 赋值时其 setter 已触发 LoadCachedCatalog，
@@ -221,6 +222,20 @@ public sealed class MainViewModel : ObservableObject
         set { _settings.DownloadDirectory = value; _settings.Save(); OnPropertyChanged(); }
     }
 
+    public string InstallDirectory
+    {
+        get => _settings.InstallDirectory;
+        set
+        {
+            var normalized = value?.Trim() ?? "";
+            if (normalized.Length == 0)
+                normalized = DriverXmlGenerator.DefaultWindowsInstallDir;
+            _settings.InstallDirectory = normalized;
+            _settings.Save();
+            OnPropertyChanged();
+        }
+    }
+
     // ---- 任务 ----
 
     public ObservableCollection<DownloadTaskViewModel> DownloadTasks { get; }
@@ -247,6 +262,7 @@ public sealed class MainViewModel : ObservableObject
     public AsyncRelayCommand RefreshCommand { get; }
     public AsyncRelayCommand DownloadCommand { get; }
     public RelayCommand BrowseFolderCommand { get; }
+    public RelayCommand BrowseInstallFolderCommand { get; }
 
     // ---- 逻辑 ----
 
@@ -363,6 +379,19 @@ public sealed class MainViewModel : ObservableObject
         };
         if (dialog.ShowDialog() == true)
             DownloadDirectory = dialog.FolderName;
+    }
+
+    private void BrowseInstallFolder()
+    {
+        var dialog = new Microsoft.Win32.OpenFolderDialog
+        {
+            Title = "选择主程序安装目录",
+            InitialDirectory = System.IO.Directory.Exists(InstallDirectory)
+                ? InstallDirectory
+                : Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
+        };
+        if (dialog.ShowDialog() == true)
+            InstallDirectory = dialog.FolderName;
     }
 }
 
