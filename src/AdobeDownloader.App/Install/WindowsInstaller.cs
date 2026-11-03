@@ -27,8 +27,9 @@ public sealed class WindowsInstaller
     private string _mainInstallDir = "";
     private readonly List<string> _mainAssetTargets = new();
     private string _mainSapCode = "";
+    private bool _installingMain;
 
-    private sealed record CreatedShortcut(string LnkPath, string Name, string Target, string Directory);
+    private sealed record CreatedShortcut(string LnkPath, string Name, string Target, string Directory, bool IsMain);
 
     public IReadOnlyList<string> Log => _log;
 
@@ -54,6 +55,7 @@ public sealed class WindowsInstaller
             var comp = components[i];
             var baseFraction = (double)i / components.Count;
             progress?.Report(new InstallProgress(baseFraction, $"正在安装 {comp.SapCode} {comp.CodexVersion} ..."));
+            _installingMain = string.Equals(comp.SapCode, _mainSapCode, StringComparison.OrdinalIgnoreCase);
             await InstallComponentAsync(driverDir, comp, driver, progress, baseFraction, 1.0 / components.Count, ct);
         }
 
@@ -393,7 +395,7 @@ public sealed class WindowsInstaller
         if (!string.IsNullOrEmpty(s.IconPath)) lnk.IconLocation = props.Resolve(s.IconPath) + ",0";
         lnk.Save();
 
-        _createdShortcuts.Add(new CreatedShortcut(lnkPath, name, target, dir));
+        _createdShortcuts.Add(new CreatedShortcut(lnkPath, name, target, dir, _installingMain));
     }
 
     // ---------- 卸载(ARP)登记 ----------
@@ -403,17 +405,17 @@ public sealed class WindowsInstaller
     {
         try
         {
-            // 优先取开始菜单里的快捷方式作展示名与主 exe
+            // 优先取主产品在开始菜单里的快捷方式作展示名与主 exe（依赖先装，其快捷方式排在前面）
             var startMenu = Environment.GetFolderPath(Environment.SpecialFolder.CommonPrograms);
-            var chosen = _createdShortcuts.FirstOrDefault(
+            var mainShortcuts = _createdShortcuts.Where(s => s.IsMain).ToList();
+            var chosen = mainShortcuts.FirstOrDefault(
                              s => s.Directory.StartsWith(startMenu, StringComparison.OrdinalIgnoreCase))
+                         ?? mainShortcuts.FirstOrDefault()
                          ?? _createdShortcuts.FirstOrDefault();
 
             // AEFT 等产品的 INSTALLDIR 就是 Adobe 共用根目录，必须收窄到产品子目录，
-            // 否则卸载时会把同目录下的其它 Adobe 产品一起删掉
-            var candidates = new[] { chosen?.Target ?? "" }
-                .Concat(_createdShortcuts.Select(s => s.Target))
-                .Concat(_mainAssetTargets);
+            // 否则卸载时会把同目录下的其它 Adobe 产品一起删掉。只用主产品自己的路径判断
+            var candidates = mainShortcuts.Select(s => s.Target).Concat(_mainAssetTargets);
             var installDir = InstallPaths.NarrowToProductDir(_mainInstallDir, candidates, new[] { driver.InstallDir });
             if (string.IsNullOrEmpty(installDir) || !Directory.Exists(installDir))
             {

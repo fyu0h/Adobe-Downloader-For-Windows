@@ -32,7 +32,11 @@ public sealed class ProductUninstaller
 
         // 2) 删除安装目录（含清只读/系统属性；带路径安全校验）
         //    旧版本对 AEFT 等产品把 Adobe 共用根目录记成了安装目录，这里按主 exe 收窄到产品子目录
-        var installDir = InstallPaths.NarrowToProductDir(record.InstallLocation, new[] { record.MainExe });
+        //    v1.6.2 起可自定义根目录（名字不一定叫 Adobe），含多个产品子目录的也按共用根处理
+        var extraRoots = LooksLikeMultiProductRoot(record.InstallLocation)
+            ? new[] { record.InstallLocation }
+            : null;
+        var installDir = InstallPaths.NarrowToProductDir(record.InstallLocation, new[] { record.MainExe }, extraRoots);
         if (string.IsNullOrEmpty(installDir))
             Info($"[警告] 安装目录是多个产品共用的根目录且无法确定产品子目录，跳过删除：{record.InstallLocation}");
         else
@@ -130,7 +134,24 @@ public sealed class ProductUninstaller
         if (full.Contains('[')) return false;                     // 未解析变量
         if (!full.Contains("Adobe", StringComparison.OrdinalIgnoreCase)) return false;
         if (InstallPaths.IsSharedAdobeRoot(full)) return false;   // 共用根目录，删了会连带其它产品
+        if (LooksLikeMultiProductRoot(full)) return false;
         // 至少两级子目录（如 C:\Program Files\Adobe\Adobe Illustrator 2026）
         return full.Count(c => c is '\\' or '/') >= 2;
+    }
+
+    /// <summary>目录下有两个及以上 "Adobe xxx" 产品子目录（各自含 exe），视为多产品共用根目录。</summary>
+    private static bool LooksLikeMultiProductRoot(string dir)
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(dir) || !Directory.Exists(dir)) return false;
+            var options = new EnumerationOptions { RecurseSubdirectories = true, IgnoreInaccessible = true };
+            return Directory.EnumerateDirectories(dir, "Adobe *")
+                .Count(d => Directory.EnumerateFiles(d, "*.exe", options).Any()) >= 2;
+        }
+        catch
+        {
+            return false;
+        }
     }
 }

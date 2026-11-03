@@ -4,6 +4,19 @@
 
 ---
 
+## v1.6.4 — 2026-11-03（卸载安全加固：避免误删依赖目录与自定义根目录）
+
+**① 收窄安装目录可能选中依赖产品**：依赖先于主产品安装，其快捷方式排在前面；若依赖也装在共用根目录下，v1.6.3 可能按依赖的快捷方式收窄，卸载主产品时误删依赖目录。
+**修复**：`CreatedShortcut` 记录是否由主产品创建；收窄目录只用主产品的快捷方式与部署路径，展示名/主 exe 也优先取主产品快捷方式。
+
+**② 自定义根目录的旧记录仍可能被整体删除**：v1.6.2 起可自定义安装根目录，名字不叫 "Adobe"（如 `D:\AdobeApps`）时无法识别为共用根。
+**修复**：卸载器新增 `LooksLikeMultiProductRoot`：目录下有 ≥2 个含 exe 的 `Adobe *` 子目录即视为共用根——按记录卸载时按主 exe 收窄，强制删除直接拒绝。
+
+### 涉及文件
+- 改 `App/Install/WindowsInstaller.cs`、`App/Uninstall/ProductUninstaller.cs`。
+
+---
+
 ## v1.6.3 — 2026-11-03（修复 #2：卸载误删全部产品、AME 空文件夹、AE 未自动安装 C4D）
 
 **① 卸载时把所有 Adobe 程序都删了**：AEFT 等产品的 application.json InstallDir 就是 `[AdobeProgramFiles]`，`INSTALLDIR` 解析为 `C:\Program Files\Adobe` 共用根目录，真实产品目录在其子目录。ARP 登记把根目录记为安装目录，卸载时递归删除连带删掉其它产品。
