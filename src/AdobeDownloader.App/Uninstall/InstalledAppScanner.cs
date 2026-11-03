@@ -1,4 +1,5 @@
 using System.IO;
+using AdobeDownloader.Core.Install;
 using Microsoft.Win32;
 
 namespace AdobeDownloader.App.Uninstall;
@@ -159,15 +160,21 @@ public static class InstalledAppScanner
         var publisher = key.GetValue("Publisher") as string ?? "";
         if (!IsAdobe(displayName, publisher)) return null;
 
+        // 旧版本登记的 InstallLocation 可能是 Adobe 共用根目录，按图标 exe 收窄，避免强制删除误删其它产品
+        var iconSource = (key.GetValue("DisplayIcon") as string ?? "").Trim();
+        var installLocation = InstallPaths.NarrowToProductDir(
+            (key.GetValue("InstallLocation") as string ?? "").Trim(),
+            new[] { iconSource.Split(',')[0].Trim('"') });
+
         return new InstalledApp
         {
             DisplayName = displayName.Trim(),
             Version = (key.GetValue("DisplayVersion") as string ?? "").Trim(),
             Publisher = publisher.Trim(),
-            IconSource = (key.GetValue("DisplayIcon") as string ?? "").Trim(),
+            IconSource = iconSource,
             UninstallString = (key.GetValue("UninstallString") as string ?? "").Trim(),
             QuietUninstallString = (key.GetValue("QuietUninstallString") as string ?? "").Trim(),
-            InstallLocation = (key.GetValue("InstallLocation") as string ?? "").Trim(),
+            InstallLocation = installLocation,
             EstimatedSizeBytes = key.GetValue("EstimatedSize") is int kb ? (long)kb * 1024 : 0,
         };
     }

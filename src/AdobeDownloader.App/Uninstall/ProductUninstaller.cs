@@ -31,7 +31,12 @@ public sealed class ProductUninstaller
         progress?.Report(0.2);
 
         // 2) 删除安装目录（含清只读/系统属性；带路径安全校验）
-        DeleteInstallDir(record.InstallLocation, progress);
+        //    旧版本对 AEFT 等产品把 Adobe 共用根目录记成了安装目录，这里按主 exe 收窄到产品子目录
+        var installDir = InstallPaths.NarrowToProductDir(record.InstallLocation, new[] { record.MainExe });
+        if (string.IsNullOrEmpty(installDir))
+            Info($"[警告] 安装目录是多个产品共用的根目录且无法确定产品子目录，跳过删除：{record.InstallLocation}");
+        else
+            DeleteInstallDir(installDir, progress);
 
         // 3) 删除 ARP 注册表项与安装记录 JSON
         try
@@ -124,6 +129,7 @@ public sealed class ProductUninstaller
         if (!Directory.Exists(full)) return false;
         if (full.Contains('[')) return false;                     // 未解析变量
         if (!full.Contains("Adobe", StringComparison.OrdinalIgnoreCase)) return false;
+        if (InstallPaths.IsSharedAdobeRoot(full)) return false;   // 共用根目录，删了会连带其它产品
         // 至少两级子目录（如 C:\Program Files\Adobe\Adobe Illustrator 2026）
         return full.Count(c => c is '\\' or '/') >= 2;
     }

@@ -302,3 +302,65 @@ public class PimxDecompressorTests
         Assert.NotEmpty(pkg.RegistryEntries);
     }
 }
+
+public class InstallPathsTests
+{
+    // 回归：AEFT 的 INSTALLDIR 就是 C:\Program Files\Adobe，卸载时不能删整个根目录
+    [Fact]
+    public void NarrowToProductDir_SharedRoot_NarrowsToProductSubfolder()
+    {
+        var dir = InstallPaths.NarrowToProductDir(
+            @"C:\Program Files\Adobe",
+            new[] { @"C:\Program Files\Adobe\Adobe After Effects 2026\Support Files\AfterFX.exe" });
+        Assert.Equal(@"C:\Program Files\Adobe\Adobe After Effects 2026", dir);
+    }
+
+    [Fact]
+    public void NarrowToProductDir_SharedRootWithoutCandidate_ReturnsEmpty()
+    {
+        Assert.Equal("", InstallPaths.NarrowToProductDir(@"C:\Program Files\Adobe\", new[] { @"D:\x\a.exe", "" }));
+        Assert.Equal("", InstallPaths.NarrowToProductDir(@"D:\Apps\Adobe", new[] { @"D:\Apps\Adobe\a.exe" }));
+    }
+
+    [Fact]
+    public void NarrowToProductDir_CustomRootFromDriver_IsTreatedAsShared()
+    {
+        var dir = InstallPaths.NarrowToProductDir(
+            @"D:\Soft", new[] { @"D:\Soft\Adobe Media Encoder 2026\x.exe" }, new[] { @"D:\Soft" });
+        Assert.Equal(@"D:\Soft\Adobe Media Encoder 2026", dir);
+    }
+
+    [Fact]
+    public void NarrowToProductDir_ProductDir_IsUnchanged()
+    {
+        var dir = InstallPaths.NarrowToProductDir(
+            @"C:\Program Files\Adobe\Adobe Bridge 2026",
+            new[] { @"C:\Program Files\Adobe\Adobe Bridge 2026\Adobe Bridge.exe" });
+        Assert.Equal(@"C:\Program Files\Adobe\Adobe Bridge 2026", dir);
+    }
+
+    // 回归：C4D 安装器 target 是目录 ...\CustomHook\win，原先被写成名为 win 的无后缀文件
+    [Fact]
+    public void FileAssetDestination_DirectoryTarget_KeepsSourceFileName()
+    {
+        Assert.Equal(
+            @"C:\K\CustomHook\win\Cinema 4D Installer.exe",
+            InstallPaths.FileAssetDestination(@"S\CustomHook\Cinema 4D Installer.exe", @"C:\K\CustomHook\win"));
+    }
+
+    [Fact]
+    public void FileAssetDestination_FileTarget_IsUsedAsIs()
+    {
+        Assert.Equal(@"C:\K\a.dll", InstallPaths.FileAssetDestination(@"S\a.dll", @"C:\K\a.dll"));
+        Assert.Equal(@"C:\K\b.dll", InstallPaths.FileAssetDestination(@"S\a.dll", @"C:\K\b.dll"));
+    }
+
+    [Fact]
+    public void ForWindows_DefinesUserDocuments()
+    {
+        var p = InstallProperties.ForWindows(@"C:\Program Files\Adobe", @"[AdobeProgramFiles]\X", @"S", "zh_CN");
+        Assert.Equal(
+            Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"Adobe\Adobe Media Encoder\26.0"),
+            p.Resolve(@"[UserDocuments]\Adobe\Adobe Media Encoder\26.0"));
+    }
+}

@@ -56,6 +56,11 @@ public sealed partial class InstallProperties
             ["CommonAppData"] = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
             ["SystemRoot"] = Environment.GetFolderPath(Environment.SpecialFolder.Windows),
             ["UserProfile"] = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),
+            // AME 等产品会在 [UserDocuments]\Adobe\... 预建工作区/日志目录
+            ["UserDocuments"] = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+            ["MyDocuments"] = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+            ["UserDesktop"] = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory),
+            ["UserStartMenu"] = Environment.GetFolderPath(Environment.SpecialFolder.Programs),
             ["CommonDesktop"] = Environment.GetFolderPath(Environment.SpecialFolder.CommonDesktopDirectory),
             // 供包级条件（如 VC 运行库的 [OSProcessorFamily]==64-bit）与路径解析用
             ["OSProcessorFamily"] = "64-bit",

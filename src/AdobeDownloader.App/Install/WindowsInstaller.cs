@@ -25,6 +25,7 @@ public sealed class WindowsInstaller
     // ARP 登记用：安装过程中收集本引擎创建的快捷方式与主产品安装目录
     private readonly List<CreatedShortcut> _createdShortcuts = new();
     private string _mainInstallDir = "";
+    private readonly List<string> _mainAssetTargets = new();
     private string _mainSapCode = "";
 
     private sealed record CreatedShortcut(string LnkPath, string Name, string Target, string Directory);
@@ -123,6 +124,8 @@ public sealed class WindowsInstaller
                 _mainInstallDir = props["INSTALLDIR"];
 
             Info($"[{comp.SapCode}] INSTALLDIR={props["INSTALLDIR"]} 解压={decompress}");
+            if (isMainComponent)
+                _mainAssetTargets.AddRange(pkg.Assets.Where(a => !a.IgnoreAsset).Select(a => props.Resolve(a.Target)));
             ExecutePackage(pkg, props, decompress, progress, baseFraction, span, ct);
         }
     }
@@ -211,13 +214,30 @@ public sealed class WindowsInstaller
 
     private void DeployAsset(string source, string target, bool decompress)
     {
+        // 含未解析变量或非绝对路径时跳过，避免在工作目录（下载器所在目录）建出 "[UserDocuments]" 之类垃圾目录
+        if (!IsResolvedAbsolutePath(target))
+        {
+            Info($"[警告] 部署目标含未解析变量，跳过：{target}");
+            return;
+        }
+
         if (Directory.Exists(source))
             CopyDirectory(source, target, decompress);
         else if (File.Exists(source))
-            DeployFile(source, target, decompress);
+        {
+            // 单文件资源的 target 通常是目录（如 C4D 安装器部署到 ...\CustomHook\win\），保留原文件名
+            var dest = InstallPaths.FileAssetDestination(source, target);
+            var destDir = Path.GetDirectoryName(dest)!;
+            if (File.Exists(destDir))
+                File.Delete(destDir); // 旧版本曾把文件误写成与目录同名的无后缀文件，先清掉
+            DeployFile(source, dest, decompress);
+        }
         else
             Info($"资源不存在，跳过: {source}");
     }
+
+    private static bool IsResolvedAbsolutePath(string path)
+        => !string.IsNullOrWhiteSpace(path) && !path.Contains('[') && Path.IsPathFullyQualified(path);
 
     private static void CopyDirectory(string sourceDir, string destDir, bool decompress)
     {
@@ -299,6 +319,8 @@ public sealed class WindowsInstaller
 
     private static void ApplyFileSystemPermission(string path, string permissionValue, IdentityReference account)
     {
+        if (!IsResolvedAbsolutePath(path))
+            throw new InvalidOperationException($"路径含未解析变量或不是绝对路径：{path}");
         Directory.CreateDirectory(path); // Adobe 常给尚不存在的目录预设权限
         var rights = permissionValue.ToUpperInvariant() switch
         {
@@ -381,22 +403,28 @@ public sealed class WindowsInstaller
     {
         try
         {
-            if (string.IsNullOrEmpty(_mainInstallDir) || !Directory.Exists(_mainInstallDir))
-            {
-                Info("跳过系统卸载登记：未能确定安装目录");
-                return;
-            }
-
             // 优先取开始菜单里的快捷方式作展示名与主 exe
             var startMenu = Environment.GetFolderPath(Environment.SpecialFolder.CommonPrograms);
             var chosen = _createdShortcuts.FirstOrDefault(
                              s => s.Directory.StartsWith(startMenu, StringComparison.OrdinalIgnoreCase))
                          ?? _createdShortcuts.FirstOrDefault();
 
-            var displayName = chosen?.Name ?? Path.GetFileName(_mainInstallDir.TrimEnd('\\'));
+            // AEFT 等产品的 INSTALLDIR 就是 Adobe 共用根目录，必须收窄到产品子目录，
+            // 否则卸载时会把同目录下的其它 Adobe 产品一起删掉
+            var candidates = new[] { chosen?.Target ?? "" }
+                .Concat(_createdShortcuts.Select(s => s.Target))
+                .Concat(_mainAssetTargets);
+            var installDir = InstallPaths.NarrowToProductDir(_mainInstallDir, candidates, new[] { driver.InstallDir });
+            if (string.IsNullOrEmpty(installDir) || !Directory.Exists(installDir))
+            {
+                Info($"跳过系统卸载登记：未能确定产品安装目录（INSTALLDIR={_mainInstallDir}）");
+                return;
+            }
+
+            var displayName = chosen?.Name ?? Path.GetFileName(installDir.TrimEnd('\\'));
             var mainExe = chosen?.Target ?? "";
             if (string.IsNullOrEmpty(mainExe) || !File.Exists(mainExe))
-                mainExe = Directory.EnumerateFiles(_mainInstallDir, "*.exe", SearchOption.AllDirectories)
+                mainExe = Directory.EnumerateFiles(installDir, "*.exe", SearchOption.AllDirectories)
                               .FirstOrDefault() ?? "";
 
             var record = new InstallRecord
@@ -404,7 +432,7 @@ public sealed class WindowsInstaller
                 SapCode = driver.Product.SapCode,
                 DisplayName = displayName,
                 Version = driver.Product.CodexVersion,
-                InstallLocation = _mainInstallDir,
+                InstallLocation = installDir,
                 MainExe = mainExe,
                 Shortcuts = _createdShortcuts.Select(s => s.LnkPath).ToList(),
                 ArpKeyName = $"AdobeDownloader.{driver.Product.SapCode}.{driver.Product.CodexVersion}",
