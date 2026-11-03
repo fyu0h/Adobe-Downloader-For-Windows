@@ -4,6 +4,24 @@
 
 ---
 
+## v1.6.3 — 2026-11-03（修复 #2：卸载误删全部产品、AME 空文件夹、AE 未自动安装 C4D）
+
+**① 卸载时把所有 Adobe 程序都删了**：AEFT 等产品的 application.json InstallDir 就是 `[AdobeProgramFiles]`，`INSTALLDIR` 解析为 `C:\Program Files\Adobe` 共用根目录，真实产品目录在其子目录。ARP 登记把根目录记为安装目录，卸载时递归删除连带删掉其它产品。
+**修复**：新增 `InstallPaths.NarrowToProductDir`，登记时按快捷方式目标/主组件部署路径收窄到产品子目录；卸载时按 MainExe 再收窄（兼容旧记录）；扫描卸载列表时按 DisplayIcon 收窄；`IsSafeInstallDir` 拒绝删除共用根目录。
+
+**② 装 Media Encoder 后在下载器目录生成 `[UserDocuments]\Adobe\...` 空文件夹**：变量表缺 `[UserDocuments]`，未解析的路径被当作相对路径创建在工作目录。
+**修复**：补 `UserDocuments`/`MyDocuments`/`UserDesktop`/`UserStartMenu`；部署与设文件夹权限前校验路径已完全解析且为绝对路径，否则跳过并告警。
+
+**③ 装 After Effects 未自动安装 Cinema 4D**：C4D 安装器是单文件资源，target 为目录 `...\CustomHook\win`，旧逻辑把 target 当文件名，写出无后缀的 `win` 文件，RunProgram 找不到 `...\win\Cinema 4D Installer.exe` 而跳过。
+**修复**：`InstallPaths.FileAssetDestination`：单文件资源除非 target 与源同名/同扩展名，否则视为目录并保留原文件名；部署前清除旧版本残留的同名文件。
+
+### 涉及文件
+- 加 `Core/Install/InstallPaths.cs`；改 `Core/Install/InstallProperties.cs`。
+- 改 `App/Install/WindowsInstaller.cs`、`App/Uninstall/ProductUninstaller.cs`、`App/Uninstall/InstalledAppScanner.cs`。
+- 加 `tests/AdobeDownloader.Core.Tests/InstallTests.cs` 7 个回归测试。
+
+---
+
 ## v1.6.1 — 2026-07-05（修复：打开软件首次下载偶发"获取 application.json 失败"）
 
 **现象**：打开软件后第一次下载某产品（如 Audition）偶尔报"创建下载任务失败：获取 application.json 失败"，再点一次就好。
